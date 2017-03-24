@@ -53,6 +53,7 @@ void setup()
   if (isnan(humidity) || isnan(temperature)) {
     Serial.println("Failed to read from DHT sensor!");
     //implement DHT sensor
+    // somehow subscribe to two topics - for plant light and for blinds
     
 }
 }
@@ -104,23 +105,48 @@ while(digitalRead(BUTTON_PIN) == LOW) { //go up untill button is pressed again a
 void openblinds()
 { 
 //code to open blinds
+if (newstate>state){ //anti-fool protection
 for (int i=0; i<=newstate; i++){
 stepper1.step(stepspercent*direction);
 }
+  state = newstate;
+}
+  else{
+    closeblinds();
+  }
 }
 
 
 void closeblinds()
 { 
 //code to close blinds
+  if (newstate<state){ //anti-fool protection
 for (int i=0; i<=newstate; i++){
 stepper1.step(-1*stepspercent*direction);
 }
-}
+  state = newstate;
+  }
+  else{
+    openblinds();
+  }
+  }
 
-void buttonpressed()
+void buttonpressed() //button is pressed, but what do we do? lets make long press close blinds to 0% and short press open to 100%
 { 
-//button is pressed, but what do we do? lets make long press close blinds to 0% and short press open to 100%
+time_start = millis();
+while(digitalRead(BUTTON_PIN) == HIGH) { };
+time_end = millis();
+BUTTON_TIME=time_end-time_start;
+
+  if (BUTTON_TIME >= 2000){
+  newstate=0;
+    closeblinds();
+  }
+  else{
+    //open blinds
+      newstate=100;
+    openblinds();
+  }
 }
 
 void loop()
@@ -134,6 +160,7 @@ if (digitalRead(BUTTON_PIN) == HIGH){
   buttonpressed();
 }
   
-//do something
+//wait for MQTT comand
+//get and post sensors data
 
 }
