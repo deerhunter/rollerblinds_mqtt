@@ -15,6 +15,7 @@ int stepsMAX=0; // maximum steps for full travel
 
 //additional variables
 #define BUTTON_TRESHOLD 150
+int BUTTON_TIME=0;
 
 //Stepper
 Stepper stepper(8,5,0,2,4);
@@ -33,6 +34,16 @@ void calibration()
 { 
 Serial.println("Starting calibration");
 //do calibration
+while(digitalRead(BUTTON_PIN) == LOW) { };
+while(digitalRead(BUTTON_PIN) == HIGH) { 
+//Count for how long the button was pressed
+};
+if (BUTTON_TIME>=2000){
+ calibrated=1;
+ Serial.println("Going down");
+  //go down untill button is pressed again
+}
+  
 }
 
 
