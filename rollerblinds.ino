@@ -37,13 +37,24 @@ Serial.println("Starting calibration");
 while(digitalRead(BUTTON_PIN) == LOW) { };
 while(digitalRead(BUTTON_PIN) == HIGH) { 
 //Count for how long the button was pressed
-};
+}
 if (BUTTON_TIME>=2000){
  calibrated=1;
  Serial.println("Going down");
-  //go down untill button is pressed again
 }
-  
+
+  while(digitalRead(BUTTON_PIN) == LOW) {
+//go down untill button is pressed again
+}
+calibrated=2;
+Serial.println("Going up");
+
+  while(digitalRead(BUTTON_PIN) == LOW) {
+//go up untill button is pressed again and count steps
+}
+ calibrated=3;
+ Serial.println("Calibration complete"); 
+stepsMAX=0; //steps counted in run up
 }
 
 
