@@ -15,10 +15,14 @@ int stepsMAX=0; // maximum steps for full travel
 
 //additional variables
 #define BUTTON_TRESHOLD 150
-int BUTTON_TIME=0;
+unsigned long BUTTON_TIME=0;
+unsigned long time_start;
+unsigned long time_end;
 
 //Stepper
-Stepper stepper(8,5,0,2,4);
+const int stepsPerRevolution = 4096;  // 64 steps per revolution and 1/64 gear is 64*64=4096 steps per revolution
+Stepper stepper1(stepsPerRevolution,5,0,2,4);
+int direction = 1; //Change to -1 if stepper is going in wrong direction
 
 //WI-FI
 
@@ -35,28 +39,32 @@ void calibration()
 Serial.println("Starting calibration");
 //do calibration
 while(digitalRead(BUTTON_PIN) == LOW) { };
-while(digitalRead(BUTTON_PIN) == HIGH) { 
-//Count for how long the button was pressed
-}
-if (BUTTON_TIME>=2000){
- calibrated=1;
+  
+time_start = millis();
+while(digitalRead(BUTTON_PIN) == HIGH) { };
+time_end = millis();
+BUTTON_TIME=time_end-time_start;
+  
+if (BUTTON_TIME>=2000){ //closes at the end of sub
+ calibrated=1; //calibrating low position
  Serial.println("Going down");
-}
 
   while(digitalRead(BUTTON_PIN) == LOW) {
 //go down untill button is pressed again
+    stepper1.step(-1*direction);
 }
-calibrated=2;
+calibrated=2; //calibrating high position
 Serial.println("Going up");
 
-  while(digitalRead(BUTTON_PIN) == LOW) {
+while(digitalRead(BUTTON_PIN) == LOW) {
 //go up untill button is pressed again and count steps
-}
+  stepper1.step(1*direction);
+  stepsMAX++; //steps counted in run up
+ }
  calibrated=3;
  Serial.println("Calibration complete"); 
-stepsMAX=0; //steps counted in run up
 }
-
+}
 
 void loop()
 { 
