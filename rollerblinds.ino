@@ -14,16 +14,16 @@
 
 //blinds variables
 int calibrated=0; //1- calibrating down 2- calibtaring up 3 - calibrated
-int state = 3; //1-up 2-down 3-middle(unknown)
+int state = 50; //% of opening. 0 - closed; 100 - open.
 int stepsMAX=0; // maximum steps for full travel
-int stepspersent;
+int stepspersent=0; //steps for 1% of moving
 
 // Sensors variables
 int light_out=0;
 int light_in=0;
-int soil_humid=0;
-int temperature=0;
-int humidity=0;
+float soil_humid=0;
+float temperature=0;
+float humidity=0;
 
 
 //additional variables
@@ -48,6 +48,13 @@ void setup()
   pinMode(BUTTON_PIN, INPUT); 
   Serial.println("Starting selftests...");
   //get sensors data and print it to console
+  delay(1000);
+  float humidity = dht.readHumidity();
+  float temperature = dht.readTemperature();
+  if (isnan(humidity) || isnan(temperature)) {
+    Serial.println("Failed to read from DHT sensor!");
+    return;
+}
 }
 
 void calibration()
@@ -67,8 +74,10 @@ if (BUTTON_TIME>=2000){ //closes at the end of sub
 while(digitalRead(BUTTON_PIN) == LOW) {
  stepper1.step(-1*direction);
 }
-state = 2; // Note that we are in bottom position
+state = 0; // Note that we are in bottom position
 calibrated=2; //calibrating high position
+Serial.println("Fully closed"); 
+delay(1000);
 Serial.println("Going up");
 
 while(digitalRead(BUTTON_PIN) == LOW) { //go up untill button is pressed again and count steps
@@ -76,14 +85,34 @@ while(digitalRead(BUTTON_PIN) == LOW) { //go up untill button is pressed again a
   stepsMAX++; //steps counted in run up
  }
  calibrated=3;
- state = 1; // Note that we are in top position
- Serial.println("Calibration complete"); 
+ state = 100; // Note that we are in top position
+ Serial.println("Calibration complete");
+ Serial.println("Fully opened"); 
  Serial.print("Maximum steps for one run is ");
  Serial.println(stepsMAX); 
  stepspercent = floor(stepsMAX/100);
  Serial.print("Steps in one percent:"); 
  Serial.println(stepspercent); 
 }
+  else{
+    Serial.print("Button is presed for:"); 
+    Serial.print(BUTTON_TIME); 
+    Serial.println("milliseconds."); 
+  }
+  }
+
+void openblinds()
+{ 
+//code to open blinds
+for (int i=0; i<newstate; i++){
+stepper1.step(stepspercent*direction);
+}
+}
+
+
+void closeblinds()
+{ 
+//code to close blinds
 }
 
 void loop()
@@ -92,7 +121,6 @@ if (calibrated==0){ //Check if we are calibrated
 Serial.println("Requires calibration"); 
 calibration();
 Serial.println("Returned after calibration");
-Serial.println("Blinds are full open now");
 }
 
 //do something
