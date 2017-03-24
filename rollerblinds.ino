@@ -3,7 +3,6 @@
 #include <PubSubClient.h>
 #include <ESP8266WiFi.h>
 
-
 //pins
 #define BUTTON_PIN 13 //Set correct pins for stuff
 #define DHT_PIN 12
@@ -15,6 +14,7 @@
 //blinds variables
 int calibrated=0; //1- calibrating down 2- calibtaring up 3 - calibrated
 int state = 50; //% of opening. 0 - closed; 100 - open.
+int newstate = 50; //state of blinds, recieved from MQTT or button
 int stepsMAX=0; // maximum steps for full travel
 int stepspersent=0; //steps for 1% of moving
 
@@ -24,7 +24,6 @@ int light_in=0;
 float soil_humid=0;
 float temperature=0;
 float humidity=0;
-
 
 //additional variables
 #define BUTTON_TRESHOLD 150
@@ -53,7 +52,8 @@ void setup()
   float temperature = dht.readTemperature();
   if (isnan(humidity) || isnan(temperature)) {
     Serial.println("Failed to read from DHT sensor!");
-    return;
+    //implement DHT sensor
+    
 }
 }
 
@@ -104,7 +104,7 @@ while(digitalRead(BUTTON_PIN) == LOW) { //go up untill button is pressed again a
 void openblinds()
 { 
 //code to open blinds
-for (int i=0; i<newstate; i++){
+for (int i=0; i<=newstate; i++){
 stepper1.step(stepspercent*direction);
 }
 }
@@ -113,6 +113,14 @@ stepper1.step(stepspercent*direction);
 void closeblinds()
 { 
 //code to close blinds
+for (int i=0; i<=newstate; i++){
+stepper1.step(-1*stepspercent*direction);
+}
+}
+
+void buttonpressed()
+{ 
+//button is pressed, but what do we do? lets make long press close blinds to 0% and short press open to 100%
 }
 
 void loop()
@@ -122,7 +130,10 @@ Serial.println("Requires calibration");
 calibration();
 Serial.println("Returned after calibration");
 }
-
+if (digitalRead(BUTTON_PIN) == HIGH){
+  buttonpressed();
+}
+  
 //do something
 
 }
