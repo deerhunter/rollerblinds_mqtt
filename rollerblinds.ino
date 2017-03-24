@@ -1,8 +1,12 @@
 #include <Stepper.h>
+#include "DHT.h"
+#include <PubSubClient.h>
+#include <ESP8266WiFi.h>
+
 
 //pins
 #define BUTTON_PIN 13 //Set correct pins for stuff
-#define TEMP_PIN 12
+#define DHT_PIN 12
 #define LIGHT_PIN 14
 #define LIGHT_SENSOR1_PIN 15
 #define LIGHT_SENSOR2_PIN 16
@@ -41,6 +45,8 @@ void setup()
   Serial.println("Booted");
   pinMode(LIGHT_PIN, OUTPUT);
   pinMode(BUTTON_PIN, INPUT); 
+  Serial.println("Starting selftests...");
+  //get sensors data and print it to console
 }
 
 void calibration()
