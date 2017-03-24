@@ -26,15 +26,13 @@ void setup()
   Serial.begin(9600);
   Serial.println("Booted");
   pinMode(LIGHT_PIN, OUTPUT);
-  pinMode(BUTTON_PIN, INPUT);
-
-  
+  pinMode(BUTTON_PIN, INPUT); 
 }
 
 void calibration()
 { 
 Serial.println("Starting calibration");
-
+//do calibration
 }
 
 
@@ -45,6 +43,6 @@ if (calibrated==0){
 calibration();
 }
 
-
+//do something
 
 }
