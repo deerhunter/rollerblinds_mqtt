@@ -16,6 +16,7 @@
 int calibrated=0; //1- calibrating down 2- calibtaring up 3 - calibrated
 int state = 3; //1-up 2-down 3-middle(unknown)
 int stepsMAX=0; // maximum steps for full travel
+int stepspersent;
 
 // Sensors variables
 int light_out=0;
@@ -79,6 +80,9 @@ while(digitalRead(BUTTON_PIN) == LOW) { //go up untill button is pressed again a
  Serial.println("Calibration complete"); 
  Serial.print("Maximum steps for one run is ");
  Serial.println(stepsMAX); 
+ stepspercent = floor(stepsMAX/100);
+ Serial.print("Steps in one percent:"); 
+ Serial.println(stepspercent); 
 }
 }
 
