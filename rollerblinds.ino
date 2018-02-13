@@ -7,26 +7,26 @@
 
 //pins
 #define BUTTON_PIN 16 //Set correct pins for stuff
-#define DHT_PIN 12
-#define LIGHT_PIN 14
-#define LIGHT_SENSOR1_PIN 6
-#define LIGHT_SENSOR2_PIN 5
-#define SOIL_SENSOR_PIN 7
+#define DHT_PIN 12 //not used yet
+#define LIGHT_PIN 14 //not used yet
+#define LIGHT_SENSOR1_PIN 6 //not used yet
+#define LIGHT_SENSOR2_PIN 5 //not used yet
+#define SOIL_SENSOR_PIN 7 //not used yet
 
 //blinds variables
 int calibrated=0; //1- calibrating down 2- calibtaring up 3 - calibrated
 int state = 50; //% of opening. 0 - closed; 100 - open.
 int newstate = 50; //state of blinds, recieved from MQTT or button
-int stepsMAX=0L; // maximum steps for full travel
+int stepsMAX=0L; // maximum steps for full travel not sure about L, perhaps use long or unsigned long
 int stepspersent=0L; //steps for 1% of moving
 
-// Sensors variables
-int light_out=0;
-int light_in=0;
-float soil_humid=0;
-float temperature=0;
-float humidity=0;
-DHT dht;
+// Sensors variables not implemented yet
+// int light_out=0;
+// int light_in=0;
+// float soil_humid=0;
+// float temperature=0;
+// float humidity=0;
+// DHT dht;
 
 //additional variables
 #define BUTTON_TRESHOLD 150
@@ -47,7 +47,7 @@ Stepper stepper1(stepsPerRevolution,5,0,2,4);
 
 //WI-FI
 char ssid[] = "miss_diavolica";
-char pass[] = "byntuhfk";
+char pass[] = "";
 //SimpleTimer timer;
 
 
@@ -79,22 +79,22 @@ void calibration()
 Serial.println("Starting calibration");
 delay(2000);
 
-//while(digitalRead(BUTTON_PIN) == HIGH) { }; //wait for button press to start calibration
+while(digitalRead(BUTTON_PIN) == HIGH) { }; //wait for button press to start calibration
 
   Serial.println("button pressed");
-//time_start = millis();
-//while(digitalRead(BUTTON_PIN) == LOW) { };
-//time_end = millis();
-//BUTTON_TIME=time_end-time_start;
+time_start = millis();
+while(digitalRead(BUTTON_PIN) == LOW) { };
+time_end = millis();
+BUTTON_TIME=time_end-time_start;
   
 if (BUTTON_TIME>=2000){ //closes at the end of sub
 
  calibrated=1; //calibrating low position
  Serial.println("Going down");
-//while(digitalRead(BUTTON_PIN) == HIGH) {
+while(digitalRead(BUTTON_PIN) == HIGH) {
  
  stepper1.step(-1*direction*20000);
-//}
+}
 state = 0; // Note that we are in bottom position
 calibrated=2; //calibrating high position
 Serial.println("Fully closed"); 
@@ -151,7 +151,7 @@ stepper1.step(-1*stepspersent*direction);
   }
   }
 
-void buttonpressed() //button is pressed, but what do we do? lets make long press close blinds to 0% and short press open to 100%
+void buttonpressed() //button is pressed, long press close blinds to 0% and short press open to 100%
 { 
 time_start = millis();
 while(digitalRead(BUTTON_PIN) == LOW) { };
