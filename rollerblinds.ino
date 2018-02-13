@@ -86,7 +86,7 @@ yield(); // avoid esp8266 watchdog triggering
   Serial.println("button pressed");
 time_start = millis();
 while(digitalRead(BUTTON_PIN) == LOW) {
-yield(); // avoid esp8266 watchdog triggering
+yield(); // avoid esp8266 watchdog triggering, perhaps should feed watchdog for long loops with ESP.wdtFeed();
 };
 time_end = millis();
 BUTTON_TIME=time_end-time_start;
