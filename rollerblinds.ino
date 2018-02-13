@@ -1,5 +1,7 @@
 //#include <AccelStepper.h>
 #include <Stepper.h>
+// check this lib https://github.com/tyhenry/CheapStepper
+
 #include "DHT.h"
 #include <PubSubClient.h>
 #include <ESP8266WiFi.h>
