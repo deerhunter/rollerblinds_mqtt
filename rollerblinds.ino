@@ -196,5 +196,6 @@ if (digitalRead(BUTTON_PIN) == LOW){
   
 //wait for MQTT comand
 //get and post sensors data
+  // add check for state!=newstate
 
 }
