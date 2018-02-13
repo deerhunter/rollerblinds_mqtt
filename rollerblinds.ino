@@ -77,7 +77,9 @@ Serial.println(humidity);
 void calibration()
 { 
 Serial.println("Starting calibration");
-delay(2000);
+stepper1.setSpeed(20);
+Serial.println("Set speed 20 RPM");
+//delay(2000);
 
 while(digitalRead(BUTTON_PIN) == HIGH) {
 yield(); // avoid esp8266 watchdog triggering
