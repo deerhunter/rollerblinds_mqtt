@@ -132,10 +132,10 @@ void openblinds()
 //code to open blinds
   if (newstate>state){ //anti-fool protection
   Serial.print("Opening blinds"); 
-for (int i=0; i<=newstate; i++){
+for (state; newstate; state++){
 stepper1.step(stepspersent*direction);
 }
-  state = newstate;
+//  state = newstate;
   Serial.print("Blinds are opened"); 
 }
   else{
@@ -149,10 +149,10 @@ void closeblinds()
 //code to close blinds
   if (newstate<state){ //anti-fool protection
   Serial.print("Closing blinds"); 
-for (int i=100; i>newstate; i--){ // rethink it newstate=0 and i=0
+for (state; newstate; state--){ 
 stepper1.step(-1*stepspersent*direction);
 }
-  state = newstate;
+//  state = newstate;
   Serial.print("Blinds are closed"); 
   }
   else{
