@@ -149,7 +149,7 @@ void closeblinds()
 //code to close blinds
   if (newstate<state){ //anti-fool protection
   Serial.print("Closing blinds"); 
-for (int i=0; i<=newstate; i++){ // rethink it newstate=0 and i=0
+for (int i=100; i>newstate; i--){ // rethink it newstate=0 and i=0
 stepper1.step(-1*stepspersent*direction);
 }
   state = newstate;
