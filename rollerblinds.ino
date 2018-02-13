@@ -7,7 +7,7 @@
 
 //pins
 #define BUTTON_PIN 16 //Set correct pins for stuff
-#define DHT_PIN 12 //not used yet
+#define DHT_PIN 12 
 #define LIGHT_PIN 14 //not used yet
 #define LIGHT_SENSOR1_PIN 6 //not used yet
 #define LIGHT_SENSOR2_PIN 5 //not used yet
@@ -23,10 +23,10 @@ int stepspersent=0L; //steps for 1% of moving
 // Sensors variables not implemented yet
 // int light_out=0;
 // int light_in=0;
-// float soil_humid=0;
-// float temperature=0;
+float soil_humid=0;
+float temperature=0;
 // float humidity=0;
-// DHT dht;
+DHT dht;
 
 //additional variables
 #define BUTTON_TRESHOLD 150
@@ -46,7 +46,7 @@ int direction = 1; //Change to -1 if stepper is going in wrong direction
 Stepper stepper1(stepsPerRevolution,5,0,2,4);
 
 //WI-FI
-char ssid[] = "miss_diavolica";
+char ssid[] = "";
 char pass[] = "";
 //SimpleTimer timer;
 
