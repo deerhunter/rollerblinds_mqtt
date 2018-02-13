@@ -79,11 +79,15 @@ void calibration()
 Serial.println("Starting calibration");
 delay(2000);
 
-while(digitalRead(BUTTON_PIN) == HIGH) { }; //wait for button press to start calibration
+while(digitalRead(BUTTON_PIN) == HIGH) {
+yield(); // avoid esp8266 watchdog triggering
+}; //wait for button press to start calibration
 
   Serial.println("button pressed");
 time_start = millis();
-while(digitalRead(BUTTON_PIN) == LOW) { };
+while(digitalRead(BUTTON_PIN) == LOW) {
+yield(); // avoid esp8266 watchdog triggering
+};
 time_end = millis();
 BUTTON_TIME=time_end-time_start;
   
@@ -92,8 +96,8 @@ if (BUTTON_TIME>=2000){ //closes at the end of sub
  calibrated=1; //calibrating low position
  Serial.println("Going down");
 while(digitalRead(BUTTON_PIN) == HIGH) {
- 
- stepper1.step(-1*direction*20000);
+  stepper1.step(-1*direction*20000);
+  yield(); // avoid esp8266 watchdog triggering
 }
 state = 0; // Note that we are in bottom position
 calibrated=2; //calibrating high position
@@ -104,6 +108,7 @@ Serial.println("Going up");
 while(digitalRead(BUTTON_PIN) == HIGH) { //go up untill button is pressed again and count steps
   stepper1.step(1*direction);
   stepsMAX++; //steps counted in run up
+  yield(); // avoid esp8266 watchdog triggering
  }
  calibrated=3;
  state = 100; // Note that we are in top position
@@ -125,11 +130,13 @@ while(digitalRead(BUTTON_PIN) == HIGH) { //go up untill button is pressed again 
 void openblinds()
 { 
 //code to open blinds
-if (newstate>state){ //anti-fool protection
+  if (newstate>state){ //anti-fool protection
+  Serial.print("Opening blinds"); 
 for (int i=0; i<=newstate; i++){
 stepper1.step(stepspersent*direction);
 }
   state = newstate;
+  Serial.print("Blinds are opened"); 
 }
   else{
     closeblinds();
@@ -141,10 +148,12 @@ void closeblinds()
 { 
 //code to close blinds
   if (newstate<state){ //anti-fool protection
+  Serial.print("Closing blinds"); 
 for (int i=0; i<=newstate; i++){
 stepper1.step(-1*stepspersent*direction);
 }
   state = newstate;
+  Serial.print("Blinds are closed"); 
   }
   else{
     openblinds();
@@ -159,7 +168,10 @@ time_end = millis();
 BUTTON_TIME=time_end-time_start;
 
   if (BUTTON_TIME >= 2000){
-  newstate=0;
+      Serial.print("Button is presed for:"); 
+      Serial.print(BUTTON_TIME); 
+      Serial.println("milliseconds."); 
+    newstate=0;
     closeblinds();
   }
   else{
